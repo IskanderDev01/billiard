@@ -14,6 +14,6 @@ export const rtkApi = createApi({
             return headers;
         },
     }),
-    tagTypes: ['order', 'table', 'product', 'option'],
+    tagTypes: ['order', 'table', 'product', 'option', 'user'],
     endpoints: () => ({}),
 });

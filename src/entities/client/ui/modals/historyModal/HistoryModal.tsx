@@ -1,6 +1,13 @@
-import { useGetOrder } from '@/entities/client/api/clientApi';
+import {
+    updateOrderProductCancel,
+    useGetOrder,
+} from '@/entities/client/api/clientApi';
+import {
+    IOrderProduct,
+    IOrderOption,
+} from '@/entities/client/models/types/clientTypes';
 import { useGetTable } from '@/shared/api/apies';
-import { Modal, Spin } from 'antd';
+import { Button, Modal, Popconfirm, Spin } from 'antd';
 
 export interface HistoryModalProps {
     orderId: number;
@@ -8,48 +15,57 @@ export interface HistoryModalProps {
     onClose: () => void;
 }
 
+const calculateDuration = (date: string, time: string) => {
+    if (!date || !time) return { totalMinutes: 0, display: 'Неизвестно' };
+
+    const startDateTimeString = `${date}T${time}`;
+    const start = new Date(startDateTimeString);
+
+    if (isNaN(start.getTime()))
+        return { totalMinutes: 0, display: 'Неизвестно' };
+
+    const now = new Date();
+    const durationInMinutes = Math.floor(
+        (now.getTime() - start.getTime()) / (1000 * 60),
+    );
+
+    const hoursPassed = Math.floor(durationInMinutes / 60);
+    const minutesPassed = durationInMinutes % 60;
+
+    return {
+        totalMinutes: durationInMinutes,
+        display: `${hoursPassed} час${
+            hoursPassed === 1 ? '' : 'а'
+        } и ${minutesPassed} минут${minutesPassed === 1 ? '' : 'ы'}`,
+    };
+};
+
 export const HistoryModal: React.FC<HistoryModalProps> = ({
     onClose,
     orderId,
     visible,
 }) => {
     const { data, isLoading } = useGetOrder(orderId);
-    const { data: tableData, isLoading: isTableLoading } = useGetTable({
-        id: data?.table_id,
-    });
+    const { data: tableData, isLoading: isTableLoading } = useGetTable(
+        data?.table_id,
+        {
+            skip: !data?.table_id,
+        },
+    );
+    const [cancelProduct] = updateOrderProductCancel();
 
     if (isLoading || isTableLoading) {
         return (
-            <Modal open={visible} onCancel={onClose} footer={null}>
+            <Modal
+                width={800}
+                className="flex justify-center items-center"
+                open={visible}
+                footer={null}
+            >
                 <Spin size="large" />
             </Modal>
         );
     }
-
-    const calculateDuration = (date: string, time: string) => {
-        if (!date || !time) return { totalMinutes: 0, display: 'Неизвестно' };
-
-        const startDateTimeString = `${date}T${time}`; // Соединяем дату и время
-        const start = new Date(startDateTimeString); // Дата и время открытия стола
-
-        if (isNaN(start.getTime()))
-            return { totalMinutes: 0, display: 'Неизвестно' };
-
-        const now = new Date(); // Текущая дата и время
-        const durationInMinutes = Math.floor(
-            (now.getTime() - start.getTime()) / (1000 * 60),
-        );
-
-        const hoursPassed = Math.floor(durationInMinutes / 60);
-        const minutesPassed = durationInMinutes % 60;
-
-        return {
-            totalMinutes: durationInMinutes,
-            display: `${hoursPassed} час${
-                hoursPassed === 1 ? '' : 'а'
-            } и ${minutesPassed} минут${minutesPassed === 1 ? '' : 'ы'}`,
-        };
-    };
 
     const duration =
         data?.date && data?.start_time
@@ -61,7 +77,11 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
     const additionalCost = pricePerMinute * duration.totalMinutes;
     const totalCost = (data?.total || 0) + additionalCost;
 
-    const groupItems = (items: any[], key1: string, key2: string) => {
+    const groupItems = (
+        items: IOrderProduct[] | IOrderOption[],
+        key1: string,
+        key2: string,
+    ) => {
         return items.reduce((acc, item) => {
             const found = acc.find(
                 (i) => i[key1] === item[key1] && i[key2] === item[key2],
@@ -75,11 +95,32 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
         }, []);
     };
 
+    const handleCancelProduct = (product_id: number) => {
+        const data = {
+            order_id: orderId,
+            products: [product_id],
+            options: [],
+            status: true,
+        };
+        cancelProduct(data);
+    };
+
+    const handleCancelOption = (option_id: number) => {
+        const data = {
+            order_id: orderId,
+            products: [],
+            options: [option_id],
+            status: true,
+        };
+        cancelProduct(data);
+    };
+
     const groupedProducts = groupItems(
         data?.products || [],
         'product_id',
         'product_name',
     );
+
     const groupedOptions = groupItems(
         data?.options || [],
         'option_id',
@@ -89,10 +130,10 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
     return (
         <Modal
             title={
-                <>
+                <div>
                     История{' '}
                     <span className="font-bold ml-1">{data?.table_name}</span>
-                </>
+                </div>
             }
             open={visible}
             onCancel={onClose}
@@ -106,8 +147,7 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
 
                 <div className="flex justify-between items-center mt-2">
                     <p>
-                        <strong>Статус стола:</strong>{' '}
-                        {data?.table_status ? 'Занят' : 'Свободен'}
+                        <strong>Статус стола:</strong> Играют
                     </p>
                     <p>
                         <strong>Время открытия:</strong> {data?.start_time}
@@ -130,14 +170,31 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
                     Купленные продукты
                 </h3>
                 {groupedProducts.length ? (
-                    <ul className="list-disc pl-5">
+                    <ul className="list-disc">
                         {groupedProducts.map((product) => (
                             <li
                                 key={product.product_id}
                                 className="py-1 flex justify-between text-[16px]"
                             >
                                 <span>
-                                    {product.product_name} x{product.count}
+                                    <Popconfirm
+                                        onConfirm={() =>
+                                            handleCancelProduct(
+                                                product.product_id,
+                                            )
+                                        }
+                                        title="Вы действительно хотите отменить продукт?"
+                                    >
+                                        <Button
+                                            size="small"
+                                            className="px-2 rounded-full"
+                                        >
+                                            -
+                                        </Button>
+                                    </Popconfirm>
+                                    <span className="pl-2">
+                                        {product.product_name} x{product.count}
+                                    </span>
                                 </span>
                                 <span>
                                     {product.price * product.count} сумм
@@ -146,21 +203,33 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
                         ))}
                     </ul>
                 ) : (
-                    <p>Продукты не найдены.</p>
+                    <></>
                 )}
 
-                {/* <h3 className="mt-4 text-md font-semibold border-b pb-1">
-                    Опции
-                </h3> */}
                 {groupedOptions.length ? (
-                    <ul className="list-disc pl-5 text-[16px]">
+                    <ul className="list-disc text-[16px]">
                         {groupedOptions.map((option) => (
                             <li
                                 key={option.option_id}
                                 className="py-1 flex justify-between"
                             >
                                 <span>
-                                    {option.option_name} x{option.count}
+                                    <Popconfirm
+                                        onConfirm={() =>
+                                            handleCancelOption(option.option_id)
+                                        }
+                                        title="Вы действительно хотите отменить продукт?"
+                                    >
+                                        <Button
+                                            size="small"
+                                            className="px-2 rounded-full"
+                                        >
+                                            -
+                                        </Button>
+                                    </Popconfirm>
+                                    <span className="pl-2">
+                                        {option.option_name} x{option.count}
+                                    </span>
                                 </span>
                                 <span>{option.price * option.count} сумм</span>
                             </li>

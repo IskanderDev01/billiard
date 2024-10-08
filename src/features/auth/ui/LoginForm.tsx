@@ -1,37 +1,47 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormProps, message } from 'antd';
 import { TOKEN } from '@/shared/const/localstorage';
-import { useGetMeLazy, useLogin } from '@/entities/auth/api/authApi';
 import { ILoginForm } from '@/entities/auth';
 import { Button, Input } from '@/shared/ui';
 
 const LoginForm = () => {
-    const [login, { data, isSuccess, isError, isLoading }] = useLogin();
-    const [triggerGetMe] = useGetMeLazy();
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [form] = Form.useForm();
 
-    const onFinish: FormProps<ILoginForm>['onFinish'] = (values) => {
+    const onFinish: FormProps<ILoginForm>['onFinish'] = async (values) => {
+        setIsLoading(true);
         const formData = new FormData();
         Object.entries(values).forEach(([key, value]) => {
             formData.append(key, value);
         });
-        login(formData);
-    };
 
-    useEffect(() => {
-        if (isError) {
+        try {
+            const response = await fetch(
+                'http://176.221.29.165:2222/auth/jwt/login',
+                {
+                    method: 'POST',
+                    body: formData,
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Неправильная почта или пароль');
+            }
+
+            const data = await response.json();
+
+            message.success('Добро пожаловать!');
+            localStorage.setItem(TOKEN, String(data.access_token));
+            navigate('/');
+        } catch (error) {
             message.error('Вы ввели неправильную почту или пароль');
             form.resetFields(['username', 'password']);
+        } finally {
+            setIsLoading(false);
         }
-        if (isSuccess) {
-            message.success('Добро пожаловать!');
-            localStorage.setItem(TOKEN, String(data?.access_token));
-            triggerGetMe();
-            navigate('/');
-        }
-    }, [isError, isSuccess, data, triggerGetMe, navigate, form]);
+    };
 
     return (
         <div className="w-full min-h-screen flex items-center justify-center px-4">

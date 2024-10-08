@@ -20,10 +20,10 @@ export const ActiveTable: React.FC = () => {
             key: 'name',
         },
         {
-            title: 'Статус',
-            dataIndex: 'status',
-            key: 'status',
-            render: () => 'Играют',
+            title: 'Цена',
+            dataIndex: 'table_price',
+            key: 'table_price',
+            render: (price) => <>{price} сумм</>,
         },
         {
             title: <div className="w-96 text-end">Действия</div>,
@@ -38,7 +38,7 @@ export const ActiveTable: React.FC = () => {
                     </Button>
                     <Button
                         type="primary"
-                        className="mx-5"
+                        className="mx-1"
                         onClick={() => handleAddProduct(record.id)}
                     >
                         Добавить продукт
@@ -75,6 +75,7 @@ export const ActiveTable: React.FC = () => {
         <>
             <Table
                 columns={columns}
+                loading={Boolean(!data)}
                 dataSource={data}
                 rowKey={(rec) => rec.id}
                 pagination={false}

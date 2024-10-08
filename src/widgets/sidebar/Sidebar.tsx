@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     AppstoreOutlined,
     SettingOutlined,
@@ -6,9 +6,11 @@ import {
 } from '@ant-design/icons';
 import { RoutePath } from '@/app/providers/router/routeConfig/routeConfig';
 import { Layout, Menu } from 'antd';
-import { FC, ReactNode, useState } from 'react';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { FC, ReactNode, useEffect, useState } from 'react';
+import { faTable, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useGetMe } from '@/entities/auth/api/authApi';
+
 const { Sider, Content } = Layout;
 
 interface SidebarProps {
@@ -16,10 +18,19 @@ interface SidebarProps {
 }
 
 export const Sidebar: FC<SidebarProps> = ({ children }) => {
+    const { data: getMeData } = useGetMe();
+    const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false);
+
     const handleToggle = () => {
         setCollapsed(!collapsed);
     };
+
+    useEffect(() => {
+        if (getMeData && getMeData.is_superuser === false) {
+            navigate('/');
+        }
+    }, [getMeData, navigate]);
 
     const menuItems = [
         {
@@ -38,15 +49,34 @@ export const Sidebar: FC<SidebarProps> = ({ children }) => {
             label: <Link to={RoutePath.productoptions}>Опции продуктов</Link>,
         },
         {
+            key: '5',
+            icon: <FontAwesomeIcon icon={faTable} />,
+            label: <Link to={RoutePath.table}>Столы</Link>,
+        },
+        {
+            key: '6',
+            icon: <FontAwesomeIcon icon={faUser} />,
+            label: <Link to={RoutePath.users}>Пользователи</Link>,
+        },
+        {
             key: '4',
             icon: <FontAwesomeIcon icon={faUsers} />,
             label: <Link to={RoutePath.client}>Клиент</Link>,
         },
     ];
 
+    if (!getMeData || getMeData.is_superuser === false) {
+        return null;
+    }
+
     return (
         <Layout className="min-h-screen">
-            <Sider collapsible collapsed={collapsed} onCollapse={handleToggle}>
+            <Sider
+                width={220}
+                collapsible
+                collapsed={collapsed}
+                onCollapse={handleToggle}
+            >
                 <div className="h-full">
                     <div className="text-center py-6">
                         <h1 className="text-2xl font-bold text-white">

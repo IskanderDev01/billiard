@@ -30,7 +30,7 @@ export const CreateOptionModal: FC<CreateOptionModalProps> = ({
             form.resetFields();
         }
         if (isError) {
-            message.error('Прои');
+            message.error('Произошла ошибка при создании');
         }
     }, [isSuccess, isError, isLoading]);
 
@@ -92,7 +92,7 @@ export const CreateOptionModal: FC<CreateOptionModalProps> = ({
                 </Form.Item>
                 <Form.Item<IOptionForm>
                     name="product_id"
-                    label="Должность"
+                    label="Продукт"
                     rules={[
                         {
                             required: true,

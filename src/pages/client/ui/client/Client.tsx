@@ -8,11 +8,19 @@ export const Client = () => {
         <>
             <Navbar />
             <div className="container mx-auto px-4 md:px-8 lg:px-16 pb-10">
-                <div className="flex items-center justify-between">
-                    <Card title="Свободные столы" className="w-[700px]">
+                <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-4 lg:gap-0">
+                    <Card
+                        typeTitle="free"
+                        title="Свободные столы"
+                        className="w-full lg:w-[690px] mb-4 lg:mb-0"
+                    >
                         <NotActiveTable />
                     </Card>
-                    <Card title="Занятые столы" className="w-[700px]">
+                    <Card
+                        typeTitle="busy"
+                        title="Занятые столы"
+                        className="w-full lg:w-[690px]"
+                    >
                         <ActiveTable />
                     </Card>
                 </div>

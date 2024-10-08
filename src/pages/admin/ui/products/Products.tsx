@@ -15,7 +15,6 @@ export const Products = () => {
         null,
     );
     const [deleteProducts] = deleteProduct();
-
     const openCreateModal = () => setIsCreateModalVisible(true);
     const closeCreateModal = () => setIsCreateModalVisible(false);
 
@@ -82,6 +81,9 @@ export const Products = () => {
             title: 'Описание',
             dataIndex: 'description',
             key: 'description',
+            render: (description) => (
+                <span>{description === 'undefined' ? '' : description}</span>
+            ),
         },
         {
             title: '',

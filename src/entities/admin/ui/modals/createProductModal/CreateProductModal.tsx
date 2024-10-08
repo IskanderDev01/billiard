@@ -90,12 +90,6 @@ export const CreateProductModal: FC<CreateProductModalProps> = ({
                 <Form.Item
                     name="description"
                     label="Описание"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Пожалуйста, введите описание!',
-                        },
-                    ]}
                 >
                     <Input placeholder="Введите описание" />
                 </Form.Item>

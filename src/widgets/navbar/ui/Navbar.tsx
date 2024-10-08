@@ -8,12 +8,18 @@ import { FlexBox } from '@/shared/ui/box/FlexBox';
 import { MenuOutlined } from '@ant-design/icons';
 import { useLogout } from '@/entities/auth/api/authApi';
 import { Button } from '@/shared/ui';
-import { Drawer, Menu } from 'antd'
+import { Drawer, Menu, Popconfirm } from 'antd';
+import {
+    useGetOrders,
+    useLazyGetReportCloseSession,
+} from '@/entities/client/api/clientApi';
 
 export const Navbar = memo(() => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const navigate = useNavigate();
     const [logout] = useLogout();
+    const [getReportCloseSession] = useLazyGetReportCloseSession();
+    const { data } = useGetOrders();
 
     const logoutBtn = () => {
         logout();
@@ -82,6 +88,12 @@ export const Navbar = memo(() => {
                 </FlexBox>
 
                 <FlexBox cls="hidden md:flex items-center">
+                    <Popconfirm
+                        onConfirm={() => getReportCloseSession()}
+                        title="Вы действительно хотите завершить сессию?"
+                    >
+                        <Button disabled={Boolean(data)}>Завершить день</Button>
+                    </Popconfirm>
                     <Button
                         icon={<FontAwesomeIcon icon={faRightFromBracket} />}
                         type="primary"

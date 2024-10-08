@@ -13,7 +13,11 @@ const DeleteButton = ({ onConfirm, text }: Props) => {
     return (
         <Popconfirm
             onConfirm={() => onConfirm()}
-            title="Вы действительно хотите завершить?"
+            title={
+                text === 'close'
+                    ? 'Вы действительно хотите завершить?'
+                    : 'Вы действительно хотите удалить?'
+            }
         >
             {text === 'close' ? (
                 <Button type="primary" danger>

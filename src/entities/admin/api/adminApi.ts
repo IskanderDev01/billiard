@@ -1,5 +1,13 @@
 import { rtkApi } from '@/shared/api/rtkApi';
-import { IOptionForm } from '../models/types/adminTypes';
+import {
+    IOptionForm,
+    // IReportDaily,
+    // IReportTable,
+    IReportTable,
+    ITableForm,
+    IUser,
+    IUserForm,
+} from '../models/types/adminTypes';
 
 const adminApi = rtkApi.injectEndpoints({
     endpoints: (build) => ({
@@ -49,6 +57,78 @@ const adminApi = rtkApi.injectEndpoints({
             }),
             invalidatesTags: ['option'],
         }),
+        createTable: build.mutation<undefined, ITableForm>({
+            query: (body) => ({
+                url: 'table/',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['table'],
+        }),
+        updateTable: build.mutation<undefined, ITableForm>({
+            query: ({ id, ...rest }) => ({
+                url: `table/${id}`,
+                method: 'PUT',
+                body: rest,
+            }),
+            invalidatesTags: ['table'],
+        }),
+        deleteTable: build.mutation<undefined, number>({
+            query: (id) => ({
+                url: `table/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['table'],
+        }),
+        createUser: build.mutation<undefined, IUserForm>({
+            query: (body) => ({
+                url: 'auth/register',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['user'],
+        }),
+        updateUser: build.mutation<undefined, IUserForm>({
+            query: ({ id, ...rest }) => ({
+                url: `auth/update/${id}`,
+                method: 'PUT',
+                body: rest,
+            }),
+            invalidatesTags: ['user'],
+        }),
+        deleteUser: build.mutation<undefined, number>({
+            query: (id) => ({
+                url: `auth/delete/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['user'],
+        }),
+        getUsers: build.query<IUser[], void>({
+            query: () => ({
+                url: 'auth/users',
+                method: 'GET',
+            }),
+            providesTags: ['user'],
+        }),
+        getUser: build.query<IUser, number>({
+            query: (id) => ({
+                url: `auth/user/${id}`,
+                method: 'GET',
+            }),
+            providesTags: ['user'],
+        }),
+        // getReportDaily: build.query<IReportDaily[], string>({
+        //     query: (date) => ({
+        //         url: `report/daily?daily_report_date=${date}`,
+        //         method: 'GET',
+        //     }),
+        // }),
+        getReportTable: build.query<IReportTable[], string>({
+            query: (date) => ({
+                url: `report/table?daily_report_date=${date}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -58,3 +138,13 @@ export const updateProduct = adminApi.useUpdateProductMutation;
 export const createOption = adminApi.useCreateOptionMutation;
 export const updateOption = adminApi.useUpdateOptionMutation;
 export const deleteOption = adminApi.useDeleteOptionMutation;
+export const createTable = adminApi.useCreateTableMutation;
+export const updateTable = adminApi.useUpdateTableMutation;
+export const deleteTable = adminApi.useDeleteTableMutation;
+export const createUser = adminApi.useCreateUserMutation;
+export const updateUser = adminApi.useUpdateUserMutation;
+export const deleteUser = adminApi.useDeleteUserMutation;
+export const useGetUsers = adminApi.useGetUsersQuery;
+export const useGetUser = adminApi.useGetUserQuery;
+// export const useGetReportDily = adminApi.useGetReportDailyQuery;
+export const useGetReportTable = adminApi.useGetReportTableQuery;

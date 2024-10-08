@@ -1,55 +1,48 @@
-import { CreateOptionModal, UpdateOptionModal } from '@/entities';
-import { deleteOption } from '@/entities/admin/api/adminApi';
-import { useGetOptions } from '@/shared/api/apies';
-import { IOption } from '@/shared/types/apiesTypes';
-import { Button, DeleteButton, EditButton, Table } from '@/shared/ui';
-import { message, TableProps } from 'antd';
+import { CreateUserModal, UpdateUserModal } from '@/entities';
+import { deleteUser, useGetUsers } from '@/entities/admin/api/adminApi';
+import { IUser } from '@/entities/admin/models/types/adminTypes';
+import { DeleteButton, EditButton } from '@/shared/ui';
+import { Button, message, Table, TableProps } from 'antd';
 import { useEffect, useState } from 'react';
 
-export const ProductOptions = () => {
-    const { data } = useGetOptions();
-    const [deleteProductsOption, { isSuccess, isError }] = deleteOption();
+export const User = () => {
+    const { data } = useGetUsers();
+    const [deleteUsers, { isSuccess, isError }] = deleteUser();
     const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
     const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
-    const [currentOptionId, setCurrentOptionId] = useState<number | null>(null);
+    const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
     const openCreateModal = () => setIsCreateModalVisible(true);
     const closeCreateModal = () => setIsCreateModalVisible(false);
 
     const openUpdateModal = (id: number) => {
-        setCurrentOptionId(id);
+        setCurrentUserId(id);
         setIsUpdateModalVisible(true);
     };
 
     const closeUpdateModal = () => {
         setIsUpdateModalVisible(false);
-        setCurrentOptionId(null);
+        setCurrentUserId(null);
     };
 
     const handleDelete = (id: number) => {
-        deleteProductsOption(id);
+        deleteUsers(id);
     };
 
     useEffect(() => {
         if (isSuccess) {
-            message.success('Опция успешно удалена!');
+            message.success('Успешно удалена!');
         }
         if (isError) {
             message.error('Произошла ошибка при удалении');
         }
     }, [isSuccess, isError]);
 
-    const columns: TableProps<IOption>['columns'] = [
+    const columns: TableProps<IUser>['columns'] = [
         {
-            title: 'Название опции',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Цена',
-            dataIndex: 'price',
-            key: 'price',
-            render: (price) => <>{price} сумм</>,
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
         },
         {
             title: '',
@@ -73,9 +66,9 @@ export const ProductOptions = () => {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-slate-800">
-                    Опции продуктов
+                    Пользователи
                 </h2>
-                <Button onClick={openCreateModal}>Добавить опцию</Button>
+                <Button onClick={openCreateModal}>Добавить пользователя</Button>
             </div>
             <Table
                 columns={columns}
@@ -85,13 +78,13 @@ export const ProductOptions = () => {
                 className="bg-white"
                 scroll={{ y: 500 }}
             />
-            <CreateOptionModal
+            <CreateUserModal
                 visible={isCreateModalVisible}
                 onClose={closeCreateModal}
             />
-            {currentOptionId !== null && (
-                <UpdateOptionModal
-                    id={currentOptionId}
+            {currentUserId !== null && (
+                <UpdateUserModal
+                    id={currentUserId}
                     visible={isUpdateModalVisible}
                     onClose={closeUpdateModal}
                 />

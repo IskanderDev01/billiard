@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGetProducts } from '@/shared/api/apies';
 import { updateOrder } from '../../../api/clientApi';
 import styled from 'styled-components';
-import { Modal, Button } from 'antd'
+import { Modal, Button, Image } from 'antd';
 
 interface ProductModalProps {
     orderId: number;
@@ -102,16 +102,25 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
     return (
         <Modal
-            title="Выберите продукты"
+            title={
+                <Button
+                    className="!bg-green-500 text-white hover:!bg-green-700 hover:!text-white hover:!border-inherit"
+                    onClick={handleSubmit}
+                >
+                    Добавить заказ
+                </Button>
+            }
             open={visible}
             onCancel={onClose}
             footer={null}
             width={800}
+            bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}
         >
             <ProductGrid>
                 {products?.map((product) => (
                     <ProductCard key={product.id}>
-                        <ProductImage
+                        <Image
+                            width={150}
                             src={`http://176.221.29.165:2222${product.image}`}
                             alt={product.name}
                         />
@@ -124,6 +133,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                                     </ProductPrice>
                                     <OptionActions>
                                         <Button
+                                            size="small"
                                             onClick={() =>
                                                 handleRemoveProduct(product.id)
                                             }
@@ -136,6 +146,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                                             )?.quantity || 0}
                                         </Quantity>
                                         <Button
+                                            size="small"
                                             onClick={() =>
                                                 handleAddProduct(product.id)
                                             }
@@ -147,81 +158,72 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                             )}
                         </ProductInfo>
 
-                        {product.options?.length ? (
-                            product.options.map((option) => (
-                                <OptionCard key={option.id}>
-                                    <OptionName>
-                                        <span className="mr-2">
-                                            {option.name}
-                                        </span>{' '}
-                                        {option.price} сумм
-                                    </OptionName>
-                                    <OptionActions>
-                                        <Button
-                                            onClick={() =>
-                                                handleRemoveProduct(
-                                                    product.id,
-                                                    option.id,
-                                                )
-                                            }
-                                        >
-                                            -
-                                        </Button>
-                                        <Quantity>
-                                            {selectedProducts.find(
-                                                (p) =>
-                                                    p.id === product.id &&
-                                                    p.optionId === option.id,
-                                            )?.quantity || 0}
-                                        </Quantity>
-                                        <Button
-                                            onClick={() =>
-                                                handleAddProduct(
-                                                    product.id,
-                                                    option.id,
-                                                )
-                                            }
-                                        >
-                                            +
-                                        </Button>
-                                    </OptionActions>
-                                </OptionCard>
-                            ))
-                        ) : (
-                            <></>
-                        )}
+                        {product.options?.length
+                            ? product.options.map((option) => (
+                                  <OptionCard key={option.id}>
+                                      <OptionName>
+                                          <span className="mr-2">
+                                              {option.name}
+                                          </span>{' '}
+                                          {option.price} сумм
+                                      </OptionName>
+                                      <OptionActions>
+                                          <Button
+                                              size="small"
+                                              onClick={() =>
+                                                  handleRemoveProduct(
+                                                      product.id,
+                                                      option.id,
+                                                  )
+                                              }
+                                          >
+                                              -
+                                          </Button>
+                                          <Quantity>
+                                              {selectedProducts.find(
+                                                  (p) =>
+                                                      p.id === product.id &&
+                                                      p.optionId === option.id,
+                                              )?.quantity || 0}
+                                          </Quantity>
+                                          <Button
+                                              size="small"
+                                              onClick={() =>
+                                                  handleAddProduct(
+                                                      product.id,
+                                                      option.id,
+                                                  )
+                                              }
+                                          >
+                                              +
+                                          </Button>
+                                      </OptionActions>
+                                  </OptionCard>
+                              ))
+                            : null}
                     </ProductCard>
                 ))}
             </ProductGrid>
-            <SubmitButton onClick={handleSubmit}>Добавить заказ</SubmitButton>
         </Modal>
     );
 };
 
-
 const ProductGrid = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
 `;
 
 const ProductCard = styled.div`
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 16px;
+    padding: 8px;
     text-align: center;
     background-color: #fff;
 `;
 
-const ProductImage = styled.img`
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 12px;
-`;
-
 const ProductInfo = styled.div`
+    margin-top: 10px;
     margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
@@ -229,11 +231,12 @@ const ProductInfo = styled.div`
 `;
 
 const ProductName = styled.div`
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
 `;
 
 const ProductPrice = styled.div`
+    font-size: 12px;
     color: #000;
 `;
 
@@ -242,14 +245,14 @@ const OptionCard = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
-    padding: 8px;
+    margin-top: 4px;
+    padding: 4px;
     background-color: #f9f9f9;
     border-radius: 4px;
 `;
 
 const OptionName = styled.div`
-    font-size: 16px;
+    font-size: 12px;
 `;
 
 const OptionActions = styled.div`
@@ -259,12 +262,5 @@ const OptionActions = styled.div`
 `;
 
 const Quantity = styled.span`
-    font-size: 16px;
-`;
-
-const SubmitButton = styled(Button)`
-    margin-top: 24px;
-    width: 100%;
-    background-color: #4caf50;
-    color: white;
+    font-size: 14px;
 `;

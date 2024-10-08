@@ -1,5 +1,5 @@
 import { LoginForm } from '@/features/auth';
-import { Admin, Products, ProductOptions } from '@/pages/admin';
+import { Admin, Products, ProductOptions, Tables, User } from '@/pages/admin';
 import { Client } from '@/pages/client';
 import { NotFoundPage } from '@/pages/NotFoundPage/ui';
 import { AppRoutesProps } from '@/shared/types/router';
@@ -10,6 +10,8 @@ export enum AppRoutes {
     ADMIN = 'admin',
     PRODUCTS = 'products',
     PRODUCTOPTIONS = 'productoptions',
+    TABLE = 'table',
+    USERS = 'users',
     LOGIN = 'login',
     NOT_FOUND = 'not_found',
 }
@@ -19,6 +21,8 @@ export const RoutePath: Record<AppRoutes, string> = {
     [AppRoutes.ADMIN]: '/admin',
     [AppRoutes.PRODUCTS]: '/admin/products',
     [AppRoutes.PRODUCTOPTIONS]: '/admin/productoptions',
+    [AppRoutes.TABLE]: '/admin/table',
+    [AppRoutes.USERS]: '/admin/users',
     [AppRoutes.LOGIN]: '/login',
     [AppRoutes.NOT_FOUND]: '*',
 };
@@ -28,22 +32,33 @@ export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
         path: RoutePath.client,
         element: <Client />,
         text: 'Главная',
-        authOnly: false,
+        authOnly: true,
     },
     [AppRoutes.ADMIN]: {
         path: RoutePath.admin,
         element: <Sidebar children={<Admin />} />,
         text: 'Отчет',
-        authOnly: false,
+        authOnly: true,
     },
     [AppRoutes.PRODUCTS]: {
         path: RoutePath.products,
-        element: <Sidebar children={<Products />} /> ,
-        authOnly: false,
+        element: <Sidebar children={<Products />} />,
+        authOnly: true,
     },
     [AppRoutes.PRODUCTOPTIONS]: {
         path: RoutePath.productoptions,
-        element: <Sidebar children={<ProductOptions />} />
+        element: <Sidebar children={<ProductOptions />} />,
+        authOnly: true,
+    },
+    [AppRoutes.TABLE]: {
+        path: RoutePath.table,
+        element: <Sidebar children={<Tables />} />,
+        authOnly: true,
+    },
+    [AppRoutes.USERS]: {
+        path: RoutePath.users,
+        element: <Sidebar children={<User />} />,
+        authOnly: true,
     },
     [AppRoutes.LOGIN]: {
         path: RoutePath.login,

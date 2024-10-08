@@ -16,10 +16,10 @@ export const NotActiveTable: React.FC = () => {
             key: 'name',
         },
         {
-            title: 'Статус',
-            dataIndex: 'status',
-            key: 'status',
-            render: () => 'Свободно',
+            title: 'Цена за час',
+            dataIndex: 'price',
+            key: 'price',
+            render: (price) => <span>{price} сумм</span>,
         },
         {
             title: <div className="w-96 text-end">Действия</div>,
@@ -44,10 +44,10 @@ export const NotActiveTable: React.FC = () => {
     return (
         <Table
             columns={columns}
+            loading={Boolean(!data)}
             dataSource={data}
             rowKey={(rec) => rec.id}
             pagination={false}
         />
     );
 };
-

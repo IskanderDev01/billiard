@@ -10,8 +10,8 @@ const apies = rtkApi.injectEndpoints({
             }),
             providesTags: ['table', 'order']
         }),
-        getTable: build.query<ITable, { id: number | undefined }>({
-            query: ({ id }) => ({
+        getTable: build.query<ITable, number>({
+            query: (id) => ({
                 url: `table/${id}`,
                 method: 'GET',
             }),

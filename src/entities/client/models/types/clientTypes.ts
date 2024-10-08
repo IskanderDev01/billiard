@@ -15,6 +15,7 @@ export interface IOrder {
     table_id: number;
     table_name: string;
     table_status: boolean;
+    table_price: number;
     start_time: string;
     products: IOrderProduct[];
     options: IOrderOption[];

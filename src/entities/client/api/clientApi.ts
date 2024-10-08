@@ -34,6 +34,20 @@ const clientApi = rtkApi.injectEndpoints({
             }),
             invalidatesTags: ['order', 'table'],
         }),
+        updateOrderProductCancel: build.mutation<IOrder, IOrderUpdate>({
+            query: ({ order_id, ...rest }) => ({
+                url: `order/cancel/${order_id}`,
+                method: 'PUT',
+                body: rest,
+            }),
+            invalidatesTags: ['order', 'table'],
+        }),
+        getReportCloseSission: build.query<unknown, void>({
+            query: () => ({
+                url: 'report/close_session',
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -41,3 +55,7 @@ export const useGetOrders = clientApi.useGetOrdersQuery;
 export const useGetOrder = clientApi.useGetOrderQuery;
 export const createOrder = clientApi.useCreateOrderMutation;
 export const updateOrder = clientApi.useUpdateOrderMutation;
+export const updateOrderProductCancel =
+    clientApi.useUpdateOrderProductCancelMutation;
+export const useLazyGetReportCloseSession =
+    clientApi.useLazyGetReportCloseSissionQuery;
