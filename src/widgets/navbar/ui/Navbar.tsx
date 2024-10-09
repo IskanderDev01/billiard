@@ -86,13 +86,14 @@ export const Navbar = memo(() => {
                         )}
                     </nav>
                 </FlexBox>
-
                 <FlexBox cls="hidden md:flex items-center">
                     <Popconfirm
                         onConfirm={() => getReportCloseSession()}
                         title="Вы действительно хотите завершить сессию?"
                     >
-                        <Button disabled={Boolean(data)}>Завершить день</Button>
+                        <Button disabled={Boolean(data?.length)}>
+                            Завершить день
+                        </Button>
                     </Popconfirm>
                     <Button
                         icon={<FontAwesomeIcon icon={faRightFromBracket} />}

@@ -7,7 +7,7 @@ import { HistoryModal, ProductModal } from '@/entities';
 
 export const ActiveTable: React.FC = () => {
     const { data } = useGetOrders();
-    const [updateTableOrder] = updateOrder();
+    const [updateTableOrder, { isLoading }] = updateOrder();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isHistoryModal, setIsHistoryModal] = useState(false);
     const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
@@ -44,6 +44,7 @@ export const ActiveTable: React.FC = () => {
                         Добавить продукт
                     </Button>
                     <DeleteButton
+                        disabled={isLoading}
                         text="close"
                         onConfirm={() => handleCloseTable(record.id)}
                     />

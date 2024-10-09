@@ -42,12 +42,12 @@ export interface IUser {
     is_verified: boolean;
 }
 
-interface IReportProductQuantity {
+export interface IReportProductQuantity {
     product_id: string;
     quantity: string;
 }
 
-interface IReportOptionQuantity {
+export interface IReportOptionQuantity {
     option_id: string;
     quantity: string;
 }
@@ -63,8 +63,15 @@ export interface IReportTable {
     date: string;
     total_play_time: number;
     updated_at: string;
+    table_name: string;
     table_id: number;
     id: number;
+    products_income: number;
+    table_income: number;
     total_income: number;
     created_at: string;
+}
+
+export interface AdminSchema {
+    reportTableData: IOrder[];
 }

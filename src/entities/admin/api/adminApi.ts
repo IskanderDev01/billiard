@@ -123,7 +123,7 @@ const adminApi = rtkApi.injectEndpoints({
         //         method: 'GET',
         //     }),
         // }),
-        getReportTable: build.query<IReportTable[], string>({
+        getReportTables: build.query<IReportTable[], string>({
             query: (date) => ({
                 url: `report/table?daily_report_date=${date}`,
                 method: 'GET',
@@ -147,4 +147,4 @@ export const deleteUser = adminApi.useDeleteUserMutation;
 export const useGetUsers = adminApi.useGetUsersQuery;
 export const useGetUser = adminApi.useGetUserQuery;
 // export const useGetReportDily = adminApi.useGetReportDailyQuery;
-export const useGetReportTable = adminApi.useGetReportTableQuery;
+export const useGetReportTables = adminApi.useGetReportTablesQuery;

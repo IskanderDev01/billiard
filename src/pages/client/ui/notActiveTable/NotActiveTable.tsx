@@ -7,7 +7,7 @@ import { createOrder } from '@/entities/client/api/clientApi';
 
 export const NotActiveTable: React.FC = () => {
     const { data } = useGetTables();
-    const [openOrder] = createOrder();
+    const [openOrder, {isLoading}] = createOrder();
 
     const columns: TableProps<ITable>['columns'] = [
         {
@@ -28,6 +28,7 @@ export const NotActiveTable: React.FC = () => {
                 <div className="w-96 flex justify-end items-center">
                     <Button
                         type="primary"
+                        disabled={isLoading}
                         onClick={() => handleOpenTable(record.id)}
                     >
                         Открыть

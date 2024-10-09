@@ -7,9 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 type Props = {
     onConfirm: () => void;
     text: 'close' | 'delete';
+    disabled?: boolean;
 };
 
-const DeleteButton = ({ onConfirm, text }: Props) => {
+const DeleteButton = ({ onConfirm, text, disabled }: Props) => {
     return (
         <Popconfirm
             onConfirm={() => onConfirm()}
@@ -20,7 +21,7 @@ const DeleteButton = ({ onConfirm, text }: Props) => {
             }
         >
             {text === 'close' ? (
-                <Button type="primary" danger>
+                <Button type="primary" disabled={disabled} danger>
                     Завершить
                 </Button>
             ) : (

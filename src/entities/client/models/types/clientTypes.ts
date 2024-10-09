@@ -1,3 +1,5 @@
+import { IReportOptionQuantity, IReportProductQuantity } from '@/entities'
+
 export interface IOrderProduct {
     product_id: number;
     product_name: string;
@@ -11,13 +13,17 @@ export interface IOrderOption {
 }
 
 export interface IOrder {
+    aggregatedProducts: IReportProductQuantity[];
+    aggregatedOptions: IReportOptionQuantity[];
     id: number;
     table_id: number;
     table_name: string;
     table_status: boolean;
     table_price: number;
+    table_income: number;
     start_time: string;
     products: IOrderProduct[];
+    products_income: number;
     options: IOrderOption[];
     end_time: string;
     duration: number;

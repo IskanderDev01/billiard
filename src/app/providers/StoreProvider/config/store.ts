@@ -3,6 +3,7 @@ import { CombinedState, configureStore, Reducer, ReducersMapObject } from '@redu
 import { StateSchema } from './StateSchema';
 import { createReducerManager } from './reducerManager';
 import { rtkApi } from '@/shared/api/rtkApi'
+import { adminReducer } from '@/entities/admin/models/slice/adminSlice'
 
 export function createReduxStore(
     initialState?: StateSchema,
@@ -10,6 +11,7 @@ export function createReduxStore(
 ) {
     const rootReducers: ReducersMapObject<StateSchema> = {
         ...asyncReducers,
+        admin: adminReducer,
         [rtkApi.reducerPath]: rtkApi.reducer,
     };
 

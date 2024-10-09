@@ -1,5 +1,12 @@
 import { LoginForm } from '@/features/auth';
-import { Admin, Products, ProductOptions, Tables, User } from '@/pages/admin';
+import {
+    Admin,
+    Products,
+    ProductOptions,
+    Tables,
+    User,
+    ReportTable,
+} from '@/pages/admin';
 import { Client } from '@/pages/client';
 import { NotFoundPage } from '@/pages/NotFoundPage/ui';
 import { AppRoutesProps } from '@/shared/types/router';
@@ -8,6 +15,7 @@ import { Sidebar } from '@/widgets/sidebar/Sidebar';
 export enum AppRoutes {
     CLIENT = 'client',
     ADMIN = 'admin',
+    REPORT_TABLE = 'report_table',
     PRODUCTS = 'products',
     PRODUCTOPTIONS = 'productoptions',
     TABLE = 'table',
@@ -19,6 +27,7 @@ export enum AppRoutes {
 export const RoutePath: Record<AppRoutes, string> = {
     [AppRoutes.CLIENT]: '/',
     [AppRoutes.ADMIN]: '/admin',
+    [AppRoutes.REPORT_TABLE]: '/admin/report_table',
     [AppRoutes.PRODUCTS]: '/admin/products',
     [AppRoutes.PRODUCTOPTIONS]: '/admin/productoptions',
     [AppRoutes.TABLE]: '/admin/table',
@@ -38,6 +47,11 @@ export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
         path: RoutePath.admin,
         element: <Sidebar children={<Admin />} />,
         text: 'Отчет',
+        authOnly: true,
+    },
+    [AppRoutes.REPORT_TABLE]: {
+        path: RoutePath.report_table,
+        element: <Sidebar children={<ReportTable />}/>,
         authOnly: true,
     },
     [AppRoutes.PRODUCTS]: {

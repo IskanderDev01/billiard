@@ -1,5 +1,5 @@
-import { MainShema } from '@/entities/mainPage/model/types/type'
-import { rtkApi } from '@/shared/api/rtkApi'
+import { AdminSchema } from '@/entities'
+import { rtkApi } from '@/shared/api/rtkApi';
 import {
     ReducersMapObject,
     AnyAction,
@@ -9,7 +9,7 @@ import {
 } from '@reduxjs/toolkit';
 
 export interface StateSchema {
-    main?: MainShema;
+    admin: AdminSchema;
     [rtkApi.reducerPath]: ReturnType<typeof rtkApi.reducer>;
 }
 

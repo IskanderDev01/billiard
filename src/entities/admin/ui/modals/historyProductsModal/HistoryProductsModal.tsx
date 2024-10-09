@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Card, Divider, Row, Col, Typography } from 'antd';
+import { Card, Divider, Row, Col, Typography, Modal } from 'antd';
 import { useGetOptions, useGetProducts } from '@/shared/api/apies';
 import styled from 'styled-components';
 
@@ -11,6 +11,8 @@ interface HistoryProductsModalProps {
         option_id?: string;
         quantity: string;
     }>;
+    isModalVisible: boolean;
+    onClose: () => void;
 }
 
 const ScrollContainer = styled.div`
@@ -24,6 +26,8 @@ const ScrollContainer = styled.div`
 
 export const HistoryProductsModal: FC<HistoryProductsModalProps> = ({
     products,
+    isModalVisible,
+    onClose,
 }) => {
     const { data: productData } = useGetProducts();
     const { data: optionData } = useGetOptions();
@@ -37,89 +41,103 @@ export const HistoryProductsModal: FC<HistoryProductsModalProps> = ({
     );
 
     return (
-        <div style={{ padding: '16px' }}>
-            <Title level={3} style={{ marginBottom: '16px' }}>
-                Детали заказа
-            </Title>
-            <Divider />
+        <Modal
+            open={isModalVisible}
+            onCancel={onClose}
+            footer={null}
+            width={600}
+        >
+            <div>
+                <Title level={3} style={{ marginBottom: '16px' }}>
+                    Детали заказа
+                </Title>
+                <Divider />
 
-            <ScrollContainer>
-                <Row gutter={[16, 16]}>
-                    {/* Продукты */}
-                    {filteredProducts.length > 0 && (
-                        <Col span={24}>
-                            <Title level={4}>Продукты</Title>
-                            {filteredProducts.map((product) => {
-                                const matchedProduct = productData?.find(
-                                    (p) => p.id === Number(product.product_id),
-                                );
-                                return (
-                                    <Card
-                                        key={product.product_id}
-                                        style={{
-                                            borderRadius: '4px',
-                                            border: '1px solid #e0e0e0',
-                                        }}
-                                        bodyStyle={{ padding: '12px' }}
-                                    >
-                                        <Title level={5} style={{ margin: 0 }}>
-                                            {matchedProduct?.name ||
-                                                'Не найдено'}
-                                        </Title>
-                                        <Text>
-                                            Количество: {product.quantity}
-                                        </Text>
-                                        <br />
-                                        <Text strong>
-                                            Цена:{' '}
-                                            {matchedProduct?.price ||
-                                                'Неизвестно'}{' '}
-                                            сумм
-                                        </Text>
-                                    </Card>
-                                );
-                            })}
-                        </Col>
-                    )}
+                <ScrollContainer>
+                    <Row gutter={[16, 16]}>
+                        {/* Продукты */}
+                        {filteredProducts.length > 0 && (
+                            <Col span={24}>
+                                <Title level={4}>Продукты</Title>
+                                {filteredProducts.map((product) => {
+                                    const matchedProduct = productData?.find(
+                                        (p) =>
+                                            p.id === Number(product.product_id),
+                                    );
+                                    return (
+                                        <Card
+                                            key={product.product_id}
+                                            style={{
+                                                marginBottom: '10px',
+                                                borderRadius: '4px',
+                                                border: '1px solid #e0e0e0',
+                                            }}
+                                        >
+                                            <Title
+                                                level={5}
+                                                style={{ margin: 0 }}
+                                            >
+                                                {matchedProduct?.name ||
+                                                    'Не найдено'}
+                                            </Title>
+                                            <Text>
+                                                Количество: {product.quantity}
+                                            </Text>
+                                            <br />
+                                            <Text strong>
+                                                Цена:{' '}
+                                                {matchedProduct?.price ||
+                                                    'Неизвестно'}{' '}
+                                                сумм
+                                            </Text>
+                                        </Card>
+                                    );
+                                })}
+                            </Col>
+                        )}
 
-                    {/* Опции */}
-                    {filteredOptions.length > 0 && (
-                        <Col span={24}>
-                            {filteredOptions.map((option) => {
-                                const matchedOption = optionData?.find(
-                                    (o) => o.id === Number(option.option_id),
-                                );
-                                return (
-                                    <Card
-                                        key={option.option_id}
-                                        style={{
-                                            marginBottom: '16px',
-                                            borderRadius: '4px',
-                                            border: '1px solid #e0e0e0',
-                                        }}
-                                        bodyStyle={{ padding: '12px' }}
-                                    >
-                                        <Title level={5} style={{ margin: 0 }}>
-                                            {matchedOption?.name ||
-                                                'Не найдено'}
-                                        </Title>
-                                        <Text>
-                                            Количество: {option.quantity}
-                                        </Text>
-                                        <br />
-                                        <Text strong>
-                                            Цена:{' '}
-                                            {matchedOption?.price ||
-                                                'Неизвестно'}{' '}
-                                            сумм
-                                        </Text>
-                                    </Card>
-                                );
-                            })}
-                        </Col>
-                    )}
-                </Row>
-            </ScrollContainer>
-        </div>
+                        {/* Опции */}
+                        {filteredOptions.length > 0 && (
+                            <Col span={24}>
+                                {filteredOptions.map((option) => {
+                                    const matchedOption = optionData?.find(
+                                        (o) =>
+                                            o.id === Number(option.option_id),
+                                    );
+                                    return (
+                                        <Card
+                                            key={option.option_id}
+                                            style={{
+                                                marginBottom: '10px',
+                                                borderRadius: '4px',
+                                                border: '1px solid #e0e0e0',
+                                            }}
+                                        >
+                                            <Title
+                                                level={5}
+                                                style={{ margin: 0 }}
+                                            >
+                                                {matchedOption?.name ||
+                                                    'Не найдено'}
+                                            </Title>
+                                            <Text>
+                                                Количество: {option.quantity}
+                                            </Text>
+                                            <br />
+                                            <Text strong>
+                                                Цена:{' '}
+                                                {matchedOption?.price ||
+                                                    'Неизвестно'}{' '}
+                                                сумм
+                                            </Text>
+                                        </Card>
+                                    );
+                                })}
+                            </Col>
+                        )}
+                    </Row>
+                </ScrollContainer>
+            </div>
+        </Modal>
     );
 };

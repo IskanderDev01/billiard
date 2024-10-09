@@ -1,8 +1,9 @@
 export type { IOrder } from './client/models/types/clientTypes';
 export type {
-    IReportDaily,
-    IReportDailyProduct,
-    IReportOrderItem,
+    IReportTable,
+    AdminSchema,
+    IReportOptionQuantity,
+    IReportProductQuantity,
 } from './admin/models/types/adminTypes';
 // export { ProductModal } from './client/ui/modals/productModal/ProductModal.async';
 // export { HistoryModal } from './client/ui/modals/historyModal/HistoryModal.async';
