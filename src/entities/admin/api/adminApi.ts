@@ -1,6 +1,7 @@
 import { rtkApi } from '@/shared/api/rtkApi';
 import {
     IOptionForm,
+    IReportDaily,
     // IReportDaily,
     // IReportTable,
     IReportTable,
@@ -117,12 +118,12 @@ const adminApi = rtkApi.injectEndpoints({
             }),
             providesTags: ['user'],
         }),
-        // getReportDaily: build.query<IReportDaily[], string>({
-        //     query: (date) => ({
-        //         url: `report/daily?daily_report_date=${date}`,
-        //         method: 'GET',
-        //     }),
-        // }),
+        getReportDaily: build.query<IReportDaily[], string>({
+            query: (date) => ({
+                url: `report/daily?daily_report_date=${date}`,
+                method: 'GET',
+            }),
+        }),
         getReportTables: build.query<IReportTable[], string>({
             query: (date) => ({
                 url: `report/table?daily_report_date=${date}`,
@@ -146,5 +147,5 @@ export const updateUser = adminApi.useUpdateUserMutation;
 export const deleteUser = adminApi.useDeleteUserMutation;
 export const useGetUsers = adminApi.useGetUsersQuery;
 export const useGetUser = adminApi.useGetUserQuery;
-// export const useGetReportDily = adminApi.useGetReportDailyQuery;
+export const useGetReportDily = adminApi.useGetReportDailyQuery;
 export const useGetReportTables = adminApi.useGetReportTablesQuery;

@@ -1,9 +1,20 @@
 import { HistoryProductsModal, IOrder, IReportTable } from '@/entities';
-import { useGetReportTables } from '@/entities/admin/api/adminApi';
+import {
+    useGetReportDily,
+    useGetReportTables,
+} from '@/entities/admin/api/adminApi';
 import { useAdminActions } from '@/entities/admin/models/slice/adminSlice';
-import { convertMinutesToHoursAndMinutes, groupItems } from '@/shared'
+import { IReportDaily } from '@/entities/admin/models/types/adminTypes';
+import { convertMinutesToHoursAndMinutes, groupItems } from '@/shared';
 import { getDefaultDateMonth } from '@/shared/lib/defaultDate/defaultDate';
-import { DatePicker, DatePickerProps, Radio, Table, TableProps } from 'antd';
+import {
+    Card,
+    DatePicker,
+    DatePickerProps,
+    Radio,
+    Table,
+    TableProps,
+} from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +25,7 @@ export const Admin = () => {
     const [selectedProducts, setSelectedProducts] = useState<any>([]);
     const [date, setDate] = useState<string>('');
     const { data } = useGetReportTables(date || getDefaultDateMonth());
+    const { data: dailyData } = useGetReportDily(date || getDefaultDateMonth());
     const [isFilter, setIsFilter] = useState<boolean>(true);
 
     const onChangeMonth: DatePickerProps['onChange'] = (
@@ -68,7 +80,11 @@ export const Admin = () => {
             title: <div className="text-center">наигранное время</div>,
             dataIndex: 'total_play_time',
             key: 'total_play_time',
-            render: (item) => <div className="text-center">{convertMinutesToHoursAndMinutes(item)}</div>,
+            render: (item) => (
+                <div className="text-center">
+                    {convertMinutesToHoursAndMinutes(item)}
+                </div>
+            ),
         },
         {
             title: <div className="text-center">доход от стола</div>,
@@ -134,7 +150,11 @@ export const Admin = () => {
             title: 'наигранное время',
             dataIndex: 'duration',
             key: 'duration',
-            render: (item) => <div className="w-24">{convertMinutesToHoursAndMinutes(item)}</div>,
+            render: (item) => (
+                <div className="w-24">
+                    {convertMinutesToHoursAndMinutes(item)}
+                </div>
+            ),
         },
         {
             title: 'доход от стола',
@@ -165,6 +185,48 @@ export const Admin = () => {
     const onChangeFilter = (e) => {
         setIsFilter(e.target.value === 'a');
     };
+    const reportDailyColumns: TableProps<IReportDaily>['columns'] = [
+        {
+            title: 'дата',
+            dataIndex: 'date',
+            key: 'date',
+            render: (item) => <>{item.split(' ')[0]}</>,
+        },
+        {
+            title: 'играли',
+            dataIndex: 'total_play_time',
+            key: 'total_play_time',
+            render: (item) => <>{convertMinutesToHoursAndMinutes(item)}</>,
+        },
+        {
+            title: 'доход от столов',
+            dataIndex: 'table_income',
+            key: 'table_income',
+            render: (item) => <>{item} сумм</>,
+        },
+        {
+            title: 'доход от продуктов',
+            dataIndex: 'product_income',
+            key: 'product_income',
+            render: (item, res) => (
+                <div
+                    className="cursor-pointer products-income"
+                    onClick={() => {
+                        setSelectedProducts(res.products);
+                        setIsModalVisible(true);
+                    }}
+                >
+                    {item} сумм
+                </div>
+            ),
+        },
+        {
+            title: 'общий доход дня',
+            dataIndex: 'total_income',
+            key: 'total_income',
+            render: (item) => <>{item} сумм</>,
+        },
+    ];
 
     return (
         <div>
@@ -199,27 +261,40 @@ export const Admin = () => {
                 </div>
             </span>
             {isFilter ? (
-                <Table
-                    size="middle"
-                    dataSource={data}
-                    loading={Boolean(!data)}
-                    columns={reportTableColumns}
-                    pagination={{ pageSize: 10 }}
-                    rowKey={(res) => res.id}
-                    onRow={(res) => ({
-                        onClick: (event) => {
-                            const target = event.target as HTMLElement;
-                            if (target.closest('.products-income')) {
-                                setSelectedProducts(res.products);
-                                setIsModalVisible(true);
-                            } else if (!isModalVisible) {
-                                setReportTableData(res.orders);
-                                navigate(`/admin/report_table`);
-                            }
-                        },
-                        className: 'hover:cursor-pointer',
-                    })}
-                />
+                <>
+                    <Card title="Доход(ы) от стола">
+                        <Table
+                            size="middle"
+                            dataSource={data}
+                            loading={Boolean(!data)}
+                            columns={reportTableColumns}
+                            pagination={{ pageSize: 10 }}
+                            rowKey={(res) => res.id}
+                            onRow={(res) => ({
+                                onClick: (event) => {
+                                    const target = event.target as HTMLElement;
+                                    if (target.closest('.products-income')) {
+                                        setSelectedProducts(res.products);
+                                        setIsModalVisible(true);
+                                    } else if (!isModalVisible) {
+                                        setReportTableData(res.orders);
+                                        navigate(`/admin/report_table`);
+                                    }
+                                },
+                                className: 'hover:cursor-pointer',
+                            })}
+                        />
+                    </Card>
+                    <Card title="Общий доход дня" className='mt-5'>
+                        <Table
+                            dataSource={dailyData}
+                            columns={reportDailyColumns}
+                            size="middle"
+                            pagination={{ pageSize: 10 }}
+                            rowKey={(res) => res.id}
+                        />
+                    </Card>
+                </>
             ) : (
                 <>
                     <div

@@ -1,5 +1,9 @@
 import { IOrder } from '@/entities';
 
+export interface AdminSchema {
+    reportTableData: IOrder[];
+}
+
 export interface IProductForm {
     product_id: number;
     name: string;
@@ -72,6 +76,15 @@ export interface IReportTable {
     created_at: string;
 }
 
-export interface AdminSchema {
-    reportTableData: IOrder[];
+export interface IReportDaily {
+    id: number;
+    date: string;
+    table_income: number;
+    orders: IOrder[];
+    products: IReportOrderDetails;
+    product_income: number;
+    updated_at: string;
+    total_income: number;
+    total_play_time: number;
+    created_at: string;
 }
