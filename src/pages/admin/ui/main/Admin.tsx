@@ -1,6 +1,7 @@
 import { HistoryProductsModal, IOrder, IReportTable } from '@/entities';
 import { useGetReportTables } from '@/entities/admin/api/adminApi';
 import { useAdminActions } from '@/entities/admin/models/slice/adminSlice';
+import { convertMinutesToHoursAndMinutes, groupItems } from '@/shared'
 import { getDefaultDateMonth } from '@/shared/lib/defaultDate/defaultDate';
 import { DatePicker, DatePickerProps, Radio, Table, TableProps } from 'antd';
 import { useState } from 'react';
@@ -23,7 +24,6 @@ export const Admin = () => {
             setDate(dateString);
         }
     };
-
     const onChange: DatePickerProps['onChange'] = (
         _,
         dateString: string | string[],
@@ -32,7 +32,23 @@ export const Admin = () => {
             setDate(dateString);
         }
     };
+    const handleGroped = (res) => {
+        const groupedProducts = groupItems(res.products, 'product_id');
+        const groupedOptions = groupItems(res.options, 'option_id');
 
+        const combinedItems = [
+            ...groupedProducts.map((product) => ({
+                product_id: product.product_id,
+                quantity: product.quantity,
+            })),
+            ...groupedOptions.map((option) => ({
+                option_id: option.option_id,
+                quantity: option.quantity,
+            })),
+        ];
+        setSelectedProducts(combinedItems);
+        setIsModalVisible(true);
+    };
     const reportTableColumns: TableProps<IReportTable>['columns'] = [
         {
             title: <div className="text-center">дата</div>,
@@ -52,7 +68,7 @@ export const Admin = () => {
             title: <div className="text-center">наигранное время</div>,
             dataIndex: 'total_play_time',
             key: 'total_play_time',
-            render: (item) => <div className="text-center">{item} минут</div>,
+            render: (item) => <div className="text-center">{convertMinutesToHoursAndMinutes(item)}</div>,
         },
         {
             title: <div className="text-center">доход от стола</div>,
@@ -83,7 +99,6 @@ export const Admin = () => {
             render: (item) => <div className="text-center">{item} сумм</div>,
         },
     ];
-
     const columns: TableProps<IOrder>['columns'] = [
         {
             title: 'дата',
@@ -119,7 +134,7 @@ export const Admin = () => {
             title: 'наигранное время',
             dataIndex: 'duration',
             key: 'duration',
-            render: (item) => <div className="w-24">{item} минут</div>,
+            render: (item) => <div className="w-24">{convertMinutesToHoursAndMinutes(item)}</div>,
         },
         {
             title: 'доход от стола',
@@ -131,8 +146,13 @@ export const Admin = () => {
             title: 'доход от продуктов',
             dataIndex: 'products_income',
             key: 'product_income',
-            render: (item) => (
-                <div className="w-28 cursor-pointer">{item} сумм</div>
+            render: (item, res) => (
+                <div
+                    className="w-28 cursor-pointer"
+                    onClick={() => handleGroped(res)}
+                >
+                    {item} сумм
+                </div>
             ),
         },
         {
@@ -145,6 +165,7 @@ export const Admin = () => {
     const onChangeFilter = (e) => {
         setIsFilter(e.target.value === 'a');
     };
+
     return (
         <div>
             <span className="flex justify-between mb-6">

@@ -1,6 +1,10 @@
 import { IOrder } from '@/entities';
 import { rtkApi } from '@/shared/api/rtkApi';
-import { IOrderPost, IOrderUpdate } from '../models/types/clientTypes';
+import {
+    IOrderPost,
+    IOrderUpdate,
+    IRealHistoryData,
+} from '../models/types/clientTypes';
 
 const clientApi = rtkApi.injectEndpoints({
     endpoints: (build) => ({
@@ -48,6 +52,19 @@ const clientApi = rtkApi.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getReportSessionHistory: build.query<IRealHistoryData[], void>({
+            query: () => ({
+                url: 'report/session_history',
+                method: 'GET',
+            }),
+            providesTags: ['order', 'table'],
+        }),
+        getReportCheck: build.mutation<unknown, number>({
+            query: (id) => ({
+                url: `report/print_check?order_id=${id}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -59,3 +76,6 @@ export const updateOrderProductCancel =
     clientApi.useUpdateOrderProductCancelMutation;
 export const useLazyGetReportCloseSession =
     clientApi.useLazyGetReportCloseSissionQuery;
+export const useGetReportSessionHistory =
+    clientApi.useGetReportSessionHistoryQuery;
+export const useGetReportCheck = clientApi.useGetReportCheckMutation;

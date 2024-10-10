@@ -111,7 +111,9 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 </Button>
             }
             open={visible}
-            onCancel={onClose}
+            onCancel={() => {
+                onClose(), setSelectedProducts([]);
+            }}
             footer={null}
             width={800}
             bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}

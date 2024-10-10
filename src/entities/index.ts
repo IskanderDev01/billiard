@@ -1,4 +1,7 @@
-export type { IOrder } from './client/models/types/clientTypes';
+export type {
+    IOrder,
+    IRealHistoryData,
+} from './client/models/types/clientTypes';
 export type {
     IReportTable,
     AdminSchema,

@@ -1,15 +1,17 @@
-import { HistoryProductsModal, IOrder } from '@/entities';
-import { useGetReportTableData } from '@/entities/admin/models/selectors/adminSelectors';
+import { HistoryProductsModal, IRealHistoryData } from '@/entities';
+import {
+    useGetReportCheck,
+    useGetReportSessionHistory,
+} from '@/entities/client/api/clientApi';
 import { convertMinutesToHoursAndMinutes, groupItems } from '@/shared';
-import { Button, Table, TableProps } from 'antd';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Button, message, Table, TableProps } from 'antd';
+import { useEffect, useState } from 'react';
 
-export const ReportTable = () => {
-    const reportTableData = useGetReportTableData();
-    const navigate = useNavigate();
+export const SessionTable = () => {
+    const { data } = useGetReportSessionHistory();
+    const [products, setProducts] = useState<any[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [modalProducts, setModalProducts] = useState<any[]>([]);
+    const [check, { isLoading, isSuccess }] = useGetReportCheck();
 
     const handleGroped = (res) => {
         const groupedProducts = groupItems(res.products, 'product_id');
@@ -25,27 +27,34 @@ export const ReportTable = () => {
                 quantity: option.quantity,
             })),
         ];
-        setModalProducts(combinedItems);
+        setProducts(combinedItems);
         setIsModalVisible(true);
     };
 
-    const columns: TableProps<IOrder>['columns'] = [
+    useEffect(() => {
+        if (isSuccess) {
+            message.success('печатаем..');
+        }
+    }, [isSuccess]);
+
+    const columns: TableProps<IRealHistoryData>['columns'] = [
         {
-            title: 'дата',
-            dataIndex: 'date',
-            key: 'date',
+            title: 'стол',
+            dataIndex: 'table_name',
+            key: 'table_name',
         },
-        { title: 'стол', dataIndex: 'table_name', key: 'table_name' },
         {
-            title: 'цена',
-            dataIndex: 'table_price',
-            key: 'table_price',
-            render: (item) => <>{item} сумм</>,
+            title: 'открытие',
+            dataIndex: 'start_time',
+            key: 'start_time',
         },
-        { title: 'время открытия', dataIndex: 'start_time', key: 'start_time' },
-        { title: 'время завершения', dataIndex: 'end_time', key: 'end_time' },
         {
-            title: 'наигранное время',
+            title: 'завершение',
+            dataIndex: 'end_time',
+            key: 'end_time',
+        },
+        {
+            title: 'играли',
             dataIndex: 'duration',
             key: 'duration',
             render: (item) => <>{convertMinutesToHoursAndMinutes(item)}</>,
@@ -59,11 +68,11 @@ export const ReportTable = () => {
         {
             title: 'доход от продуктов',
             dataIndex: 'products_income',
-            key: 'product_income',
-            render: (item, record) => (
+            key: 'products_income',
+            render: (item, res) => (
                 <div
                     className="cursor-pointer"
-                    onClick={() => handleGroped(record)}
+                    onClick={() => handleGroped(res)}
                 >
                     {item} сумм
                 </div>
@@ -75,26 +84,33 @@ export const ReportTable = () => {
             key: 'total',
             render: (item) => <>{item} сумм</>,
         },
+        {
+            title: 'чек',
+            dataIndex: 'check',
+            key: 'check',
+            render: (_, res) => (
+                <div>
+                    <Button onClick={() => check(res.id)} disabled={isLoading}>
+                        распечатать чек
+                    </Button>
+                </div>
+            ),
+        },
     ];
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">История</h2>
-                <Button onClick={() => navigate(-1)}>назад</Button>
-            </div>
             <Table
-                loading={Boolean(!reportTableData)}
-                dataSource={reportTableData}
-                pagination={{ pageSize: 10 }}
+                dataSource={data}
+                loading={Boolean(!data)}
                 columns={columns}
                 rowKey={(res) => res.id}
-                size="middle"
+                pagination={{ pageSize: 10 }}
             />
             <HistoryProductsModal
                 onClose={() => setIsModalVisible(false)}
                 isModalVisible={isModalVisible}
-                products={modalProducts}
+                products={products}
             />
         </div>
     );

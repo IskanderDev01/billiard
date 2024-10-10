@@ -52,7 +52,7 @@ export interface IReportOptionQuantity {
     quantity: string;
 }
 
-interface IReportOrderDetails {
+export interface IReportOrderDetails {
     products: IReportProductQuantity[];
     options: IReportOptionQuantity[];
 }
