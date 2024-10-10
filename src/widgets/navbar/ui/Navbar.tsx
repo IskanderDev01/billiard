@@ -7,8 +7,7 @@ import { TOKEN } from '@/shared/const/localstorage';
 import { FlexBox } from '@/shared/ui/box/FlexBox';
 import { MenuOutlined } from '@ant-design/icons';
 import { useLogout } from '@/entities/auth/api/authApi';
-import { Button } from '@/shared/ui';
-import { Drawer, Menu, Popconfirm } from 'antd';
+import { Button, Drawer, Menu, Popconfirm } from 'antd';
 import {
     useGetOrders,
     useLazyGetReportCloseSession,

@@ -2,8 +2,8 @@ import { CreateOptionModal, UpdateOptionModal } from '@/entities';
 import { deleteOption } from '@/entities/admin/api/adminApi';
 import { useGetOptions } from '@/shared/api/apies';
 import { IOption } from '@/shared/types/apiesTypes';
-import { Button, DeleteButton, EditButton, Table } from '@/shared/ui';
-import { message, TableProps } from 'antd';
+import { DeleteButton, EditButton} from '@/shared/ui';
+import { Button, message, Table, TableProps } from 'antd';
 import { useEffect, useState } from 'react';
 
 export const ProductOptions = () => {

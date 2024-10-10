@@ -2,8 +2,8 @@ import { CreateTableModal, UpdateTableModal } from '@/entities'
 import { deleteTable } from '@/entities/admin/api/adminApi';
 import { useGetTables } from '@/shared/api/apies';
 import { ITable } from '@/shared/types/apiesTypes';
-import { Button, DeleteButton, EditButton } from '@/shared/ui';
-import { message, Table, TableProps } from 'antd';
+import { DeleteButton, EditButton } from '@/shared/ui';
+import { Button, message, Table, TableProps } from 'antd';
 import { useEffect, useState } from 'react';
 
 export const Tables = () => {

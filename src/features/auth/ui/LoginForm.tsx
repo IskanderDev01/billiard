@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, FormProps, message } from 'antd';
+import { Button, Form, FormProps, Input, message } from 'antd';
 import { TOKEN } from '@/shared/const/localstorage';
 import { ILoginForm } from '@/entities/auth';
-import { Button, Input } from '@/shared/ui';
 
-const LoginForm = () => {
+export const LoginForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [form] = Form.useForm();
@@ -101,5 +100,3 @@ const LoginForm = () => {
         </div>
     );
 };
-
-export default LoginForm;

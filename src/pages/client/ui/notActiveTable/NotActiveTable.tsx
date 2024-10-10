@@ -1,7 +1,6 @@
-import { TableProps } from 'antd';
+import { Button, Table, TableProps } from 'antd';
 import { ITable } from '@/shared/types/apiesTypes';
 import React from 'react';
-import { Button, Table } from '@/shared/ui';
 import { useGetTables } from '@/shared/api/apies';
 import { createOrder } from '@/entities/client/api/clientApi';
 

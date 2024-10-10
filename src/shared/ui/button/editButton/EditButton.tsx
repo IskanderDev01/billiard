@@ -1,13 +1,12 @@
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { memo } from 'react';
-import { Button } from '../..';
+import { Button } from 'antd';
 
 type Props = {
     onClick: () => void;
 };
 
-const EditButton = ({ onClick }: Props) => {
+export const EditButton = ({ onClick }: Props) => {
     return (
         <Button
             onClick={onClick}
@@ -16,5 +15,3 @@ const EditButton = ({ onClick }: Props) => {
         ></Button>
     );
 };
-
-export default memo(EditButton);

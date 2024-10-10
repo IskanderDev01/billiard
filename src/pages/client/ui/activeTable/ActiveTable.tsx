@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useGetOrders, updateOrder } from '@/entities/client/api/clientApi';
 import { IOrder } from '@/entities/client/models/types/clientTypes';
-import { Button, DeleteButton, Table } from '@/shared/ui';
-import { TableProps } from 'antd';
+import { DeleteButton } from '@/shared/ui';
+import { Button, Table, TableProps } from 'antd';
 import { HistoryModal, ProductModal } from '@/entities';
 
 export const ActiveTable: React.FC = () => {

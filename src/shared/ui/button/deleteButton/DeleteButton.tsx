@@ -1,6 +1,4 @@
-import { Popconfirm } from 'antd';
-import { memo } from 'react';
-import { Button } from '../..';
+import { Button, Popconfirm } from 'antd';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -10,7 +8,7 @@ type Props = {
     disabled?: boolean;
 };
 
-const DeleteButton = ({ onConfirm, text, disabled }: Props) => {
+export const DeleteButton = ({ onConfirm, text, disabled }: Props) => {
     return (
         <Popconfirm
             onConfirm={() => onConfirm()}
@@ -34,5 +32,3 @@ const DeleteButton = ({ onConfirm, text, disabled }: Props) => {
         </Popconfirm>
     );
 };
-
-export default memo(DeleteButton);

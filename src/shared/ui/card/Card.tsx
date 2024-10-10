@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { lazy, memo, ReactNode } from 'react';
-
-const CardAntd = lazy(() => import('antd/es/card/Card'));
+import { ReactNode } from 'react';
+import CardAntd from 'antd/es/card/Card'
 
 const CustomCard = styled(CardAntd)`
     padding: 0px;
@@ -15,7 +14,7 @@ export interface CardProps {
     typeTitle: 'busy' | 'free';
 }
 
-const Card = ({ children, title, className, typeTitle }: CardProps) => {
+export const Card = ({ children, title, className, typeTitle }: CardProps) => {
     return (
         <CustomCard
             title={
@@ -41,5 +40,3 @@ const Card = ({ children, title, className, typeTitle }: CardProps) => {
         </CustomCard>
     );
 };
-
-export default memo(Card);
