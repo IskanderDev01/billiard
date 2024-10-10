@@ -10,6 +10,7 @@ import { FC, ReactNode, useEffect, useState } from 'react';
 import { faTable, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useGetMe } from '@/entities/auth/api/authApi';
+import logo from '../../shared/assets/logo3.png';
 
 const { Sider, Content } = Layout;
 
@@ -78,9 +79,9 @@ export const Sidebar: FC<SidebarProps> = ({ children }) => {
                 onCollapse={handleToggle}
             >
                 <div className="h-full">
-                    <div className="text-center py-6">
+                    <div className="text-center pt-6">
                         <h1 className="text-2xl font-bold text-white">
-                            Бильярд
+                            <img src={logo} alt="logo" className="w-44" />
                         </h1>
                     </div>
                     <Menu
