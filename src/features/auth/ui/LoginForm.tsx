@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Form, FormProps, Input, message } from 'antd';
 import { TOKEN } from '@/shared/const/localstorage';
 import { ILoginForm } from '@/entities/auth';
+import { baseURL } from '@/shared/api/rtkApi';
 
 export const LoginForm = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,13 +18,10 @@ export const LoginForm = () => {
         });
 
         try {
-            const response = await fetch(
-                'http://176.221.29.165:2222/auth/jwt/login',
-                {
-                    method: 'POST',
-                    body: formData,
-                },
-            );
+            const response = await fetch(`${baseURL}auth/jwt/login`, {
+                method: 'POST',
+                body: formData,
+            });
 
             if (!response.ok) {
                 throw new Error('Неправильная почта или пароль');

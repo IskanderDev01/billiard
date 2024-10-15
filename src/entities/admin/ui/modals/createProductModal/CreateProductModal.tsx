@@ -2,6 +2,7 @@ import { Button, Form, Input, message, Modal, Upload } from 'antd';
 import { IProductForm } from '@/entities/admin/models/types/adminTypes';
 import { FC, useState } from 'react';
 import { UploadFile } from 'antd/es/upload/interface';
+import { baseURL } from '@/shared/api/rtkApi';
 
 export interface CreateProductModalProps {
     visible: boolean;
@@ -27,7 +28,7 @@ export const CreateProductModal: FC<CreateProductModalProps> = ({
         formData.append('image', file as any);
 
         try {
-            fetch('http://176.221.29.165:2222/product/', {
+            fetch(`${baseURL}product/`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -87,10 +88,7 @@ export const CreateProductModal: FC<CreateProductModalProps> = ({
                 >
                     <Input placeholder="Введите цену" />
                 </Form.Item>
-                <Form.Item
-                    name="description"
-                    label="Описание"
-                >
+                <Form.Item name="description" label="Описание">
                     <Input placeholder="Введите описание" />
                 </Form.Item>
                 <Form.Item
@@ -132,4 +130,3 @@ export const CreateProductModal: FC<CreateProductModalProps> = ({
         </Modal>
     );
 };
-

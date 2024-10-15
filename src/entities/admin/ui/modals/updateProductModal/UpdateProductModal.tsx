@@ -3,6 +3,7 @@ import { IProductForm } from '@/entities/admin/models/types/adminTypes';
 import { FC, useEffect, useState } from 'react';
 import { UploadFile } from 'antd/es/upload/interface';
 import { useGetProduct } from '@/shared/api/apies';
+import { baseURL } from '@/shared/api/rtkApi'
 
 export interface UpdateProductModalProps {
     id: number;
@@ -41,7 +42,7 @@ export const UpdateProductModal: FC<UpdateProductModalProps> = ({
 
         try {
             const response = await fetch(
-                `http://176.221.29.165:2222/product/${id}`,
+                `${baseURL}product/${id}`,
                 {
                     method: 'PUT',
                     headers: {

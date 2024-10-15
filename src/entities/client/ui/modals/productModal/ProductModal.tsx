@@ -3,6 +3,7 @@ import { useGetProducts } from '@/shared/api/apies';
 import { updateOrder } from '../../../api/clientApi';
 import styled from 'styled-components';
 import { Modal, Button, Image } from 'antd';
+import { baseURLPORT } from '@/shared/api/rtkApi';
 
 interface ProductModalProps {
     orderId: number;
@@ -123,7 +124,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     <ProductCard key={product.id}>
                         <Image
                             width={150}
-                            src={`http://176.221.29.165:2222${product.image}`}
+                            src={`${baseURLPORT}${product.image}`}
                             alt={product.name}
                         />
                         <ProductInfo>

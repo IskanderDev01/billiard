@@ -1,9 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+export const baseURL = 'http://176.221.29.165:2222/';
+export const baseURLPORT = 'http://176.221.29.165:2222';
+
 export const rtkApi = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://176.221.29.165:2222/',
+        baseUrl: baseURL,
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('token') || '';
             if (token) {
