@@ -12,7 +12,6 @@ import {
     useGetOrders,
     useLazyGetReportCloseSession,
 } from '@/entities/client/api/clientApi';
-import logo from '../../../shared/assets/logo3.svg';
 
 export const Navbar = memo(() => {
     const [drawerOpen, setDrawerOpen] = useState(false);
