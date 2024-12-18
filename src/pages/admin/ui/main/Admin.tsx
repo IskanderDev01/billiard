@@ -182,7 +182,7 @@ export const Admin = () => {
             render: (item) => <div className="w-28 text-end">{item} сумм</div>,
         },
     ];
-    const onChangeFilter = (e) => {
+    const onChangeFilter = (e: any) => {
         setIsFilter(e.target.value === 'a');
     };
     const reportDailyColumns: TableProps<IReportDaily>['columns'] = [

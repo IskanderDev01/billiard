@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export const baseURL = 'http://176.221.29.165:2222/';
-export const baseURLPORT = 'http://176.221.29.165:2222';
+export const baseURL = 'http://127.0.0.1:8000/';
+export const baseURLPORT = 'http://127.0.0.1:8000';
 
 export const rtkApi = createApi({
     reducerPath: 'api',

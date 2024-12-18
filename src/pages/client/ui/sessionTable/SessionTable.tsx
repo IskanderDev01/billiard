@@ -5,6 +5,7 @@ import {
 } from '@/entities/client/api/clientApi';
 import { convertMinutesToHoursAndMinutes, groupItems } from '@/shared';
 import { Button, message, Table, TableProps } from 'antd';
+import dayjs from 'dayjs'
 import { useEffect, useState } from 'react';
 
 export const SessionTable = () => {
@@ -12,7 +13,9 @@ export const SessionTable = () => {
     const [products, setProducts] = useState<any[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [check, { isLoading, isSuccess }] = useGetReportCheck();
-
+    const sortedData = data
+    ? [...data].sort((a, b) => dayjs(b.updated_at).valueOf() - dayjs(a.updated_at).valueOf())
+    : [];
     const handleGroped = (res) => {
         const groupedProducts = groupItems(res.products, 'product_id');
         const groupedOptions = groupItems(res.options, 'option_id');
@@ -101,7 +104,7 @@ export const SessionTable = () => {
     return (
         <div>
             <Table
-                dataSource={data}
+                dataSource={sortedData}
                 loading={Boolean(!data)}
                 columns={columns}
                 rowKey={(res) => res.id}
