@@ -5,6 +5,7 @@ import {
     // IReportDaily,
     // IReportTable,
     IReportTable,
+    IReportTableFilter,
     ITableForm,
     IUser,
     IUserForm,
@@ -130,6 +131,12 @@ const adminApi = rtkApi.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getReportTablesFilter: build.query<IReportTableFilter[], string>({
+            query: (date) => ({
+                url: `report/get_test?date=${date}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -149,3 +156,4 @@ export const useGetUsers = adminApi.useGetUsersQuery;
 export const useGetUser = adminApi.useGetUserQuery;
 export const useGetReportDily = adminApi.useGetReportDailyQuery;
 export const useGetReportTables = adminApi.useGetReportTablesQuery;
+export const useGetReportTablesFilter = adminApi.useGetReportTablesFilterQuery;

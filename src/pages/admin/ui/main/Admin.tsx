@@ -1,10 +1,14 @@
-import { HistoryProductsModal, IOrder, IReportTable } from '@/entities';
+import { HistoryProductsModal, IOrder } from '@/entities';
 import {
     useGetReportDily,
     useGetReportTables,
+    useGetReportTablesFilter,
 } from '@/entities/admin/api/adminApi';
-import { useAdminActions } from '@/entities/admin/models/slice/adminSlice';
-import { IReportDaily } from '@/entities/admin/models/types/adminTypes';
+// import { useAdminActions } from '@/entities/admin/models/slice/adminSlice';
+import {
+    IReportDaily,
+    IReportTableFilter,
+} from '@/entities/admin/models/types/adminTypes';
 import { convertMinutesToHoursAndMinutes, groupItems } from '@/shared';
 import { getDefaultDateMonth } from '@/shared/lib/defaultDate/defaultDate';
 import {
@@ -21,10 +25,13 @@ import { useNavigate } from 'react-router-dom';
 export const Admin = () => {
     const navigate = useNavigate();
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const { setReportTableData } = useAdminActions();
+    // const { setReportTableData } = useAdminActions();
     const [selectedProducts, setSelectedProducts] = useState<any>([]);
     const [date, setDate] = useState<string>('');
     const { data } = useGetReportTables(date || getDefaultDateMonth());
+    const { data: byTablesData } = useGetReportTablesFilter(
+        date || getDefaultDateMonth(),
+    );
     const { data: dailyData } = useGetReportDily(date || getDefaultDateMonth());
     const [isFilter, setIsFilter] = useState<boolean>(true);
 
@@ -44,6 +51,7 @@ export const Admin = () => {
             setDate(dateString);
         }
     };
+
     const handleGroped = (res) => {
         const groupedProducts = groupItems(res.products, 'product_id');
         const groupedOptions = groupItems(res.options, 'option_id');
@@ -61,25 +69,18 @@ export const Admin = () => {
         setSelectedProducts(combinedItems);
         setIsModalVisible(true);
     };
-    const reportTableColumns: TableProps<IReportTable>['columns'] = [
-        {
-            title: <div className="text-center">дата</div>,
-            dataIndex: 'date',
-            key: 'date',
-            render: (item) => (
-                <div className="text-center">{item.split(' ')[0]}</div>
-            ),
-        },
+
+    const byTablesDataColumns: TableProps<IReportTableFilter>['columns'] = [
         {
             title: <div className="text-center">стол</div>,
-            dataIndex: 'table_name',
             key: 'table_name',
+            dataIndex: 'table_name',
             render: (item) => <div className="text-center">{item}</div>,
         },
         {
-            title: <div className="text-center">наигранное время</div>,
-            dataIndex: 'total_play_time',
+            title: 'играли',
             key: 'total_play_time',
+            dataIndex: 'total_play_time',
             render: (item) => (
                 <div className="text-center">
                     {convertMinutesToHoursAndMinutes(item)}
@@ -88,33 +89,83 @@ export const Admin = () => {
         },
         {
             title: <div className="text-center">доход от стола</div>,
-            dataIndex: 'table_income',
-            key: 'table_income',
+            key: 'total_table_income',
+            dataIndex: 'total_table_income',
             render: (item) => <div className="text-center">{item} сумм</div>,
         },
         {
             title: <div className="text-center">доход от продуктов</div>,
-            dataIndex: 'products_income',
-            key: 'products_income',
-            render: (item, res) => (
-                <div
-                    className="text-center cursor-pointer products-income"
-                    onClick={() => {
-                        setSelectedProducts(res.products);
-                        setIsModalVisible(true);
-                    }}
-                >
-                    {item} сумм
-                </div>
-            ),
+            key: 'total_products_income',
+            dataIndex: 'total_products_income',
+            render: (item) => <div className="text-center">{item} сумм</div>,
+        },
+        {
+            title: 'Заказов',
+            key: 'total_entries',
+            dataIndex: 'total_entries',
+            render: (item) => <div className="text-center">{item}</div>,
         },
         {
             title: <div className="text-center">общий доход</div>,
-            dataIndex: 'total_income',
             key: 'total_income',
-            render: (item) => <div className="text-center">{item} сумм</div>,
+            dataIndex: 'total_income',
+            render: (item) => <>{item} сумм</>,
         },
     ];
+    // const reportTableColumns: TableProps<IReportTable>['columns'] = [
+    //     {
+    //         title: <div className="text-center">дата</div>,
+    //         dataIndex: 'date',
+    //         key: 'date',
+    //         render: (item) => (
+    //             <div className="text-center">{item.split(' ')[0]}</div>
+    //         ),
+    //     },
+    //     {
+    //         title: <div className="text-center">стол</div>,
+    //         dataIndex: 'table_name',
+    //         key: 'table_name',
+    //         render: (item) => <div className="text-center">{item}</div>,
+    //     },
+    //     {
+    //         title: <div className="text-center">наигранное время</div>,
+    //         dataIndex: 'total_play_time',
+    //         key: 'total_play_time',
+    //         render: (item) => (
+    //             <div className="text-center">
+    //                 {convertMinutesToHoursAndMinutes(item)}
+    //             </div>
+    //         ),
+    //     },
+    //     {
+    //         title: <div className="text-center">доход от стола</div>,
+    //         dataIndex: 'table_income',
+    //         key: 'table_income',
+    //         render: (item) => <div className="text-center">{item} сумм</div>,
+    //     },
+    //     {
+    //         title: <div className="text-center">доход от продуктов</div>,
+    //         dataIndex: 'products_income',
+    //         key: 'products_income',
+    //         render: (item, res) => (
+    //             <div
+    //                 className="text-center cursor-pointer products-income"
+    //                 onClick={() => {
+    //                     setSelectedProducts(res.products);
+    //                     setIsModalVisible(true);
+    //                 }}
+    //             >
+    //                 {item} сумм
+    //             </div>
+    //         ),
+    //     },
+    //     {
+    //         title: <div className="text-center">общий доход</div>,
+    //         dataIndex: 'total_income',
+    //         key: 'total_income',
+    //         render: (item) => <div className="text-center">{item} сумм</div>,
+    //     },
+    // ];
     const columns: TableProps<IOrder>['columns'] = [
         {
             title: 'дата',
@@ -265,7 +316,22 @@ export const Admin = () => {
                     <Card title="Доход(ы) от стола">
                         <Table
                             size="middle"
+                            dataSource={byTablesData}
+                            columns={byTablesDataColumns}
+                            scroll={{ y: 500 }}
+                            onRow={() => ({
+                                onClick: () => {
+                                    navigate(`/admin/report_table`);
+                                },
+                                className: 'hover:cursor-pointer',
+                            })}
+                            loading={Boolean(!byTablesData)}
+                            rowKey={(res) => res.table_id}
+                        />
+                        {/* <Table
+                            size="middle"
                             dataSource={data}
+                            scroll={{ y: 500 }}
                             loading={Boolean(!data)}
                             columns={reportTableColumns}
                             pagination={{ pageSize: 10 }}
@@ -283,13 +349,14 @@ export const Admin = () => {
                                 },
                                 className: 'hover:cursor-pointer',
                             })}
-                        />
+                        /> */}
                     </Card>
-                    <Card title="Общий доход дня" className='mt-5'>
+                    <Card title="Общий доход дня" className="mt-5">
                         <Table
                             dataSource={dailyData}
                             columns={reportDailyColumns}
                             size="middle"
+                            scroll={{ y: 500 }}
                             pagination={{ pageSize: 10 }}
                             rowKey={(res) => res.id}
                         />
@@ -319,6 +386,7 @@ export const Admin = () => {
                             <Table
                                 showHeader={false}
                                 key={item.id}
+                                scroll={{ y: 500 }}
                                 dataSource={item?.orders}
                                 loading={Boolean(!data)}
                                 columns={columns}

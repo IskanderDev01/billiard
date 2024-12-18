@@ -76,6 +76,16 @@ export interface IReportTable {
     created_at: string;
 }
 
+export interface IReportTableFilter {
+    table_id: number;
+    table_name: string;
+    total_table_income: number;
+    total_products_income: number;
+    total_income: number;
+    total_play_time: number;
+    total_entries: number;
+}
+
 export interface IReportDaily {
     id: number;
     date: string;
