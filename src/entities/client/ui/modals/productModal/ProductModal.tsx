@@ -124,6 +124,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     <ProductCard key={product.id}>
                         <Image
                             width={150}
+                            height={200}
                             src={`${baseURLPORT}${product.image}`}
                             alt={product.name}
                         />

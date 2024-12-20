@@ -5,6 +5,7 @@ import { DeleteButton, EditButton } from '@/shared/ui';
 import { useState } from 'react';
 import { CreateProductModal, UpdateProductModal } from '@/entities';
 import { deleteProduct } from '@/entities/admin/api/adminApi';
+import { baseURLPORT } from '@/shared/api/rtkApi'
 
 export const Products = () => {
     const { data, refetch } = useGetProducts();
@@ -57,7 +58,7 @@ export const Products = () => {
             render: (url) => (
                 <div>
                     <Image
-                        src={`http://176.221.29.165:2222${url}`}
+                        src={`${baseURLPORT}${url}`}
                         preview={{ onVisibleChange: setIsPreviewOpened }}
                         width={50}
                         height={50}
