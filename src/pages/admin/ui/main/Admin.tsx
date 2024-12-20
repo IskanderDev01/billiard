@@ -82,9 +82,9 @@ export const Admin = () => {
             key: 'total_play_time',
             dataIndex: 'total_play_time',
             render: (item) => (
-                <div className="text-center">
+                <>
                     {convertMinutesToHoursAndMinutes(item)}
-                </div>
+                </>
             ),
         },
         {
@@ -100,13 +100,13 @@ export const Admin = () => {
             render: (item) => <div className="text-center">{item} сумм</div>,
         },
         {
-            title: 'Заказов',
+            title: 'заказов',
             key: 'total_entries',
             dataIndex: 'total_entries',
-            render: (item) => <div className="text-center">{item}</div>,
+            render: (item) => <>{item}</>,
         },
         {
-            title: <div className="text-center">общий доход</div>,
+            title: 'общий доход',
             key: 'total_income',
             dataIndex: 'total_income',
             render: (item) => <>{item} сумм</>,
